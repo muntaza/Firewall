@@ -1,5 +1,5 @@
 # Firewall
-Script FIrewall
+Script Firewall
 
 - OpenBSD PF
 - NFTables
