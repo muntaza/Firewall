@@ -255,13 +255,16 @@ mengedit file ip_output.conf sih? Iya, itu hanya sementara saja, saat semua
 IP yang anda perlukan sudah terdaftar, anda bisa tidur lebih nyenyak dan lebih
 tenang beristirahat, karena salah satu celah penting (reverse telnet) telah di tutup.
 
-# Penutup
-
 Walaupun sudah level 3, masih ada beberapa kekurangan pada setting firewall nftables
-ini. yaitu:
+ini, yaitu tidak tersedianya fitur:
 
 - Synproxy
 - Anti DDOS
+
+# Penutup
+
+File-file script nftables yang ada di tulisan ini, bisa di download di
+[sini](https://github.com/muntaza/Firewall/tree/master/nftables).
 
 Akhirnya, jangan lupa berdo'a, semoga Allah Ta'ala selalu menjaga kita. Semoga
 Allah Ta'ala menjaga server kita di dunia maya. Aamiin.
