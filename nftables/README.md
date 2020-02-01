@@ -145,8 +145,7 @@ pada IP yang kita definisikan. Mengapa perlu melindungi dari serangan reverse
 telnet? Jawabannya adalah, kadang terdapat lubang keamanan (security hole) pada
 aplikasi, sehingga attacker dapat mengeksekusi tools seperti netcat untuk
 membaypas firewall (firewalking) seperti contoh di
-[sini](https://www.dummies.com/programming/networking/test-firewall-rules-to-prevent-network-hacks/)
-dan di [sini](https://www.cyberciti.biz/tips/howto-linux-iptables-bypass-firewall-restriction.html)
+[sini](https://www.hackingtutorials.org/networking/hacking-netcat-part-2-bind-reverse-shells/).
 
 Sangat saya sarankan, untuk website yang memerlukan security tinggi, agar
 mengaplikasikan level 3 ini.
@@ -261,10 +260,116 @@ ini, yaitu tidak tersedianya fitur:
 - Synproxy
 - Anti DDOS
 
+# Tanya Jawab
+
+1.  Apa sih pentingnya firewall?
+
+    Jawab:
+
+    Mohon maaf sekali, tulisan ini sepertinya bukan untuk anda, he... he...
+
+1.  Saya masih belum paham nftables ini, bisakah anda jelaskan dari awal?
+
+    Jawab:
+
+    Silahkan lihat bagian
+    [pertama](https://www.muntaza.id/nftables/2019/12/15/nftables-01.html),
+    [kedua](https://www.muntaza.id/nftables/2019/12/16/nftables-kedua.html) dan
+    [ketiga](https://www.muntaza.id/nftables/2019/12/17/nftables-ketiga.html) seri
+    tutorial ini. Kemudian, gunakan mesin pencari anda, semisal
+    [duckduckgo](https://duckduckgo.com/).
+
+1.  Server kami perlu terkoneksi ke server lain, bagaimana caranya?
+
+    Jawab:
+
+    Kalau anda berada di level 3, maka tambahkan IP address server tujuan
+    ke file ip_output.conf.
+
+1.  Sesekali saya perlu mendownload file dengan __wget__ atau mengcopy file
+    dengan __scp__, namun saya merasa tidak perlu menambahkan IP address
+    tujuan ke file ip_output.conf, apa yang harus saya lakukan?
+
+    Jawab:
+
+    Turunkan ntftables ke level 2:
+    ```text
+    $ sudo nft -f /etc/nftables_level_2.conf
+    ```
+
+    Gunakan wget atau scp atau lainnya, bila anda telah selesai, naik kan
+    ke level 3 kembali:
+    ```text
+    $ sudo nft -f /etc/nftables_level_3.conf
+    ```
+
+1.  Server kami perlu membuka port khusus (misal: 4000) untuk IP address tertentu dalam
+    rangka back_up atau hal lainnya, bagaimana caranya?
+
+    Jawab:
+
+    Anda tinggal edit __chain input__, tambahkan dan sesuaikan, seperti:
+
+    ```text
+    ip saddr 192.0.2.1 tcp dport 4000 ct state new accept
+    ```
+
+    Di atas baris __drop__ sehingga menjadi:
+
+    ```text
+	chain INPUT {
+		type filter hook input priority 0; policy drop;
+		ct state established,related accept
+		iifname "lo" accept
+		ip saddr @ip_indonesia tcp dport { ssh, http, https } ct state new accept
+		ip saddr 192.0.2.1 tcp dport 4000 ct state new accept
+		drop
+	}
+    ```
+
+    Ingat, baris pertama yang sesuai, itu yang akan di jalankan, sebagaimana
+    saya jelaskan di bagian [ketiga](https://www.muntaza.id/nftables/2019/12/17/nftables-ketiga.html)
+    seri toturial ini.
+
+1.  Kami menggunakan let's encrypt, bagaimana cara memperpanjang sertifikat
+    dalam keadaan server let's encrypt perlu koneksi ke web server kami
+    untuk validasi, sedangkan
+    IP yang mereka gunakan tidak kita ketahui?
+
+    Jawab:
+
+    Gunakan Cron untuk memperpanjang let's encrypt, dengan urutan sebagai berikut:
+    - Tentukan jam tertentu setiap hari untuk memperpanjang sertifikat.
+    - Menit ke-0, turunkan nftables ke level 1.
+    - Menit ke-1, cek perpanjangan sertifikat, bila di perpanjang, restart web
+      server, bila tidak, biarkan saja.
+    - Menit ke-4, naik kan nftables ke level 3.
+
+
+    Nah, dengan demikian, secara default, nftables berada di posisi level 3, hanya
+    pada jam tertentu, misal jam 10 malam, selama 5 menit pertama, nftables turun
+    ke level 1, lalu kembali lagi ke level 3.
+
+1.  OK, saya tertarik dengan nftables ini, saya ingin mempelajari lebih lanjut,
+    ada links yang di sarankan?
+
+    Jawab:
+
+    Coba lihat di bagian Daftar Pustaka, dan jangan lupakan mesin pencari anda,
+    semisal [duckduckgo](https://duckduckgo.com/) atau lainnya, banyak tutorial yang
+    bagus di luar sana.
+
 # Penutup
 
 File-file script nftables yang ada di tulisan ini, bisa di download di
 [sini](https://github.com/muntaza/Firewall/tree/master/nftables).
+
+Hal penting yang saya ingatkan, bahwa koneksi ssh ke server haruslah __hanya__
+dengan Public Key Authentication, disable Password Authentication, seperti saya tuliskan
+di [sini](https://www.muntaza.id/openbsd/ssh/2018/12/09/public-key-only-ssh-openbsd.html) serta
+private key __harus__ tetap dilindungi password. Hal ini untuk mencegah serangan
+[bruteforce](https://serverfault.com/questions/594746/how-to-stop-prevent-ssh-bruteforce#594750)
+pada OpenSSH.
 
 Akhirnya, jangan lupa berdo'a, semoga Allah Ta'ala selalu menjaga kita. Semoga
 Allah Ta'ala menjaga server kita di dunia maya. Aamiin.
