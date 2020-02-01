@@ -18,7 +18,7 @@ Terkadang, seorang admin tidak berani mengaktifkan firewall, alasannya?
 Aplikasi saya kok jadi error kalau firewall aktif... Sebenarnya bukan error,
 tapi setting firewall nya yang belum tepat... he... he...
 
-Kemudian, agar pada admin bisa mencoba nftables ini, saya akan menulis kan
+Kemudian, agar para admin bisa mencoba nftables ini, saya akan menulis kan
 setting dengan cara bertingkat, yaitu dari level 0 sampai level tertinggi
 yaitu level 3. Sehingga, kalau ternyata error, maka firewallnya bisa di
 turunkan dulu levelnya.
