@@ -262,12 +262,6 @@ ini, yaitu tidak tersedianya fitur:
 
 # Tanya Jawab
 
-1.  Apa sih pentingnya firewall?
-
-    Jawab:
-
-    Mohon maaf sekali, tulisan ini sepertinya bukan untuk anda, he... he...
-
 1.  Saya masih belum paham nftables ini, bisakah anda jelaskan dari awal?
 
     Jawab:
