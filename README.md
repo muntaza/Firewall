@@ -1,5 +1,5 @@
 # Firewall
 Script Firewall
 
-- OpenBSD PF
-- NFTables
+- [OpenBSD PF](https://github.com/muntaza/Firewall/tree/master/pf)
+- [NFTables](https://github.com/muntaza/Firewall/tree/master/nftables)
