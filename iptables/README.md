@@ -40,14 +40,14 @@ $IPTABLES -I INPUT 1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 echo
 echo "iptables firewall is up `date`"
-{% endhighlight %}
+```
 
 Berikut ini penjelasan ringkas nya:
 
 {% highlight bash %}
 $IPTABLES -F
 $IPTABLES -X
-{% endhighlight %}
+```
 
 Membersihkan Perintah IPTABLES sebelumnya, jika ada.
 
@@ -55,19 +55,19 @@ Membersihkan Perintah IPTABLES sebelumnya, jika ada.
 $IPTABLES -P FORWARD DROP
 $IPTABLES -P OUTPUT ACCEPT
 $IPTABLES -P INPUT DROP
-{% endhighlight %}
+```
 
 Koneksi Masuk dan Forward di Tolak, Koneksi Keluar di izinkan
 
 {% highlight bash %}
 $IPTABLES -A INPUT -i lo -j ACCEPT
-{% endhighlight %}
+```
 
 Izinkan koneksi dari dan ke Localhost
 
 {% highlight bash %}
 $IPTABLES -I INPUT 1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-{% endhighlight %}
+```
 
 Saat koneksi keluar, paket yang datang dari luar memiliki penanda
 ESTABLISHED, yang berarti paket tersebut adalah balasan dari server
@@ -77,7 +77,7 @@ Sekian penjelasan makna nya. File script tersebut saya simpan di:
 
 {% highlight bash %}
 /home/muntaza/bin/iptables_mint.sh
-{% endhighlight %}
+```
 
 Kemudian, agar tiap booting firewall ini aktif, kita perlu mengkonfigurasi
 modul [rc-local](https://www.linuxbabe.com/linux-server/how-to-enable-etcrc-local-with-systemd)
@@ -86,11 +86,11 @@ di systemd. Berikut langkahnya:
 Edit file
 {% highlight bash %}
 $ vim /etc/systemd/system/rc-local.service
-{% endhighlight %}
+```
 
 Lalu isi file tersebut adalah:
 
-{% highlight text %}
+```text
 [Unit]
  Description=/etc/rc.local Compatibility
  ConditionPathExists=/etc/rc.local
@@ -103,25 +103,25 @@ Lalu isi file tersebut adalah:
 
 [Install]
  WantedBy=mutli-user.target
-{% endhighlight %}
+```
 
 Buat file /etc/rc.local yang isinya:
 
-{% highlight text %}
+```text
 #!/bin/bash
 
 /home/muntaza/bin/iptables_mint.sh
-{% endhighlight %}
+```
 
 Lalu jadikan file tersebut executable:
 
 {% highlight bash %}
 $ sudo chmod +x /etc/rc.local
-{% endhighlight %}
+```
 
 Aktifkan modul rc-local dan cek hasilnya:
 
-{% highlight text %}
+```text
 $ sudo systemctl stop rc-local
 $ sudo systemctl start rc-local
 $ sudo systemctl enable rc-local
@@ -153,7 +153,7 @@ Chain FORWARD (policy DROP 0 packets, 0 bytes)
 Chain OUTPUT (policy ACCEPT 20 packets, 17275 bytes)
  pkts bytes target     prot opt in     out     source               destination
 
-{% endhighlight %}
+```
 
 
 Semoga bermanfaat.
