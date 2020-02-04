@@ -19,7 +19,7 @@ IPTABLES di [sini](https://wiki.archlinux.org/index.php/Simple_stateful_firewall
 Linux yang saya gunakan adalah Linux Mint 19. Berikut ini script
 IPTABLES nya:
 
-{% highlight bash %}
+```text
 #!/bin/bash
 echo "jalankan firewall"
 
@@ -44,14 +44,14 @@ echo "iptables firewall is up `date`"
 
 Berikut ini penjelasan ringkas nya:
 
-{% highlight bash %}
+```text
 $IPTABLES -F
 $IPTABLES -X
 ```
 
 Membersihkan Perintah IPTABLES sebelumnya, jika ada.
 
-{% highlight bash %}
+```text
 $IPTABLES -P FORWARD DROP
 $IPTABLES -P OUTPUT ACCEPT
 $IPTABLES -P INPUT DROP
@@ -59,13 +59,13 @@ $IPTABLES -P INPUT DROP
 
 Koneksi Masuk dan Forward di Tolak, Koneksi Keluar di izinkan
 
-{% highlight bash %}
+```text
 $IPTABLES -A INPUT -i lo -j ACCEPT
 ```
 
 Izinkan koneksi dari dan ke Localhost
 
-{% highlight bash %}
+```text
 $IPTABLES -I INPUT 1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 ```
 
@@ -75,7 +75,7 @@ yang dituju, maka izin kan paket tersebut Masuk.
 
 Sekian penjelasan makna nya. File script tersebut saya simpan di:
 
-{% highlight bash %}
+```text
 /home/muntaza/bin/iptables_mint.sh
 ```
 
@@ -84,7 +84,7 @@ modul [rc-local](https://www.linuxbabe.com/linux-server/how-to-enable-etcrc-loca
 di systemd. Berikut langkahnya:
 
 Edit file
-{% highlight bash %}
+```text
 $ vim /etc/systemd/system/rc-local.service
 ```
 
@@ -115,7 +115,7 @@ Buat file /etc/rc.local yang isinya:
 
 Lalu jadikan file tersebut executable:
 
-{% highlight bash %}
+```text
 $ sudo chmod +x /etc/rc.local
 ```
 
