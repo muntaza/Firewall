@@ -15,10 +15,19 @@ masih belum mampu melindungi server dari serangan:
 
     DDOS ini bahkan bisa saja hanya menggunakan tools semisal 
     [apache benchmark](https://blog.getpolymorph.com/7-tips-for-heavy-load-testing-with-apache-bench-b1127916b7b6),
+    sehingga sangat perlu sebuah firewall memiliki fitur anti DDOS.
 
+-   [SYN Attack](https://en.wikipedia.org/wiki/SYN_flood)
 
+    SYN Attack ini termasuk kategori DDOS juga, sehingga sebuah firewall
+    haruslah mampu menahan serangan jenis ini.
 
--   [Sync Attack]()
+Di sini, saya akan melanjutkan tulisan saya sebelumnya tentang 
+[pf firewall](https://www.muntaza.id/openbsd/2019/08/31/openbsd-pf-cloud.html),
+walaupun pada tulisan kali ini, akan saya ulang kembali beberapa hal yang telah 
+saya sebutkan pada tulisan tersebut.
+
+    
 
 # Penutup
 
