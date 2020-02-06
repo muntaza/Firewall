@@ -1,7 +1,6 @@
 # Firewall
 
 
-
 Setiap Firewall memiliki kelebihan dan kekurangan masing-masing.
 Disini saya tampilkan contoh script firewall yang tersedia, sehingga di harapkan memudahkan para admin untuk mempelajarinya.
 Jangan ada copy paste, karena script ini bersifat contoh saja, sehingga harus di sesuaikan dengan kebutuhan system yang ada.
