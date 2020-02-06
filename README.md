@@ -1,6 +1,6 @@
 # Firewall
 
-Daftar script Firewall:
+Setiap Firewall memiliki kelebihan dan kekurangan masing-masing.
 
 - [OpenBSD PF](https://github.com/muntaza/Firewall/tree/master/pf)
 - [NFTables](https://github.com/muntaza/Firewall/tree/master/nftables)
