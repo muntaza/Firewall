@@ -260,6 +260,77 @@ ini, yaitu tidak tersedianya fitur:
 - Synproxy
 - Anti DDOS
 
+# Level 4
+
+Pada level 4, kita tambahkan filter untuk IPv6, sehingga pada server
+yang sudah di setting IPv6 pada interface internetnya, akan terlindungi
+dari reverse telnet juga seperti setting pada level 3 diatas. Berikut
+ini file configurasi level 4:
+
+```text
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+define lo_if  = "lo"
+
+table ip filter {
+	include "/etc/ip_indonesia.conf"
+	include "/etc/ip_output.conf"
+
+	chain INPUT {
+		type filter hook input priority 0; policy drop;
+		ct state established,related accept
+		iifname $lo_if accept
+		ip saddr @ip_indonesia tcp dport { ssh, http, https } ct state new accept
+		drop
+	}
+
+	chain FORWARD {
+		type filter hook forward priority 0; policy drop;
+	}
+
+	chain OUTPUT {
+		type filter hook output priority 0; policy drop;
+		ct state established,related accept
+		oifname $lo_if accept
+		ip daddr @ip_output accept
+		drop
+	}
+}
+
+
+table ip6 filter {
+	include "/etc/ip6_indonesia.conf"
+	include "/etc/ip6_output.conf"
+
+	chain INPUT {
+		type filter hook input priority 0; policy drop;
+		ct state established,related accept
+		iifname $lo_if accept
+		ip6 saddr @ip6_indonesia tcp dport { ssh, http, https } ct state new accept
+		drop
+	}
+
+	chain FORWARD {
+		type filter hook forward priority 0; policy drop;
+	}
+
+	chain OUTPUT {
+		type filter hook output priority 0; policy drop;
+		ct state established,related accept
+		oifname $lo_if accept
+		ip6 daddr @ip6_output accept
+		drop
+	}
+}
+```
+
+File [daftar](https://www.ipdeny.com/ipv6/ipaddresses/aggregated/id-aggregated.zone)
+IPv6 saya dapatkan dari
+[https://www.ipdeny.com/](https://www.ipdeny.com/).
+
+
 # Tanya Jawab
 
 1.  Saya masih belum paham nftables ini, bisakah anda jelaskan dari awal?
@@ -352,6 +423,61 @@ ini, yaitu tidak tersedianya fitur:
     Coba lihat di bagian Daftar Pustaka, dan jangan lupakan mesin pencari anda,
     semisal [duckduckgo](https://duckduckgo.com/) atau lainnya, banyak tutorial yang
     bagus di luar sana.
+
+1.  Bagaimana cara mengaktifkan setting level 4 pada CentOS 8?
+
+    Jawab:
+
+    Berikut ini contoh penerapannya:
+
+    ```text
+    [muntaza@mail working]$ git clone https://github.com/muntaza/Firewall.git
+    Cloning into 'Firewall'...
+    remote: Enumerating objects: 28, done.
+    remote: Counting objects: 100% (28/28), done.
+    remote: Compressing objects: 100% (22/22), done.
+    remote: Total 202 (delta 9), reused 22 (delta 5), pack-reused 174
+    Receiving objects: 100% (202/202), 94.79 KiB | 242.00 KiB/s, done.
+    Resolving deltas: 100% (102/102), done.
+    [muntaza@mail working]$ cd Firewall/
+    [muntaza@mail Firewall]$ ls
+    assets  iptables  LICENSE  nftables  pf  pf2  README.md
+    [muntaza@mail Firewall]$ cd nftables/
+    [muntaza@mail nftables]$ ls
+    ip6_indonesia.conf  ip_output.conf         nftables_level_1.conf  nftables_level_4.conf
+    ip6_output.conf     nftables.conf          nftables_level_2.conf  README.md
+    ip_indonesia.conf   nftables_level_0.conf  nftables_level_3.conf
+    [muntaza@mail nftables]$ sudo cp nftables* /etc/sysconfig/
+    [muntaza@mail nftables]$ sudo cp ip /etc/sysconfig/
+    ip6_indonesia.conf  ip6_output.conf     ip_indonesia.conf   ip_output.conf      
+    [muntaza@mail nftables]$ sudo cp ip* /etc/
+
+    [muntaza@mail ~]$ sudo systemctl stop firewalld
+    [muntaza@mail ~]$ sudo systemctl disable firewalld
+    [muntaza@mail ~]$ sudo systemctl enable nftables
+    [muntaza@mail ~]$ sudo systemctl restart nftables
+    [muntaza@mail ~]$ sudo systemctl status firewalld
+    ● firewalld.service - firewalld - dynamic firewall daemon
+       Loaded: loaded (/usr/lib/systemd/system/firewalld.service; disabled; vendor preset: enabled)
+       Active: inactive (dead)
+         Docs: man:firewalld(1)
+    [muntaza@mail ~]$ sudo systemctl status nftables
+    ● nftables.service - Netfilter Tables
+       Loaded: loaded (/usr/lib/systemd/system/nftables.service; enabled; vendor preset: disabled)
+       Active: active (exited) since Sun 2020-06-14 13:28:19 UTC; 8s ago
+         Docs: man:nft(8)
+      Process: 1228 ExecStop=/sbin/nft flush ruleset (code=exited, status=0/SUCCESS)
+      Process: 1229 ExecStart=/sbin/nft -f /etc/sysconfig/nftables.conf (code=exited, status=0/SUCCESS)
+     Main PID: 1229 (code=exited, status=0/SUCCESS)
+    
+    Jun 14 13:28:19 mail.paringin.com systemd[1]: Starting Netfilter Tables...
+    Jun 14 13:28:19 mail.paringin.com systemd[1]: Started Netfilter Tables.
+    [muntaza@mail ~]$
+
+    [muntaza@mail nftables]$ cd /etc/sysconfig/
+    [muntaza@mail sysconfig]$ sudo cp nftables_level_4.conf nftables.conf 
+    [muntaza@mail sysconfig]$ sudo /usr/sbin/nft -f /etc/sysconfig/nftables.conf
+    ```
 
 # Penutup
 
